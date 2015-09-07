@@ -3,6 +3,8 @@ package gudthing;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 /**
  * Created by Ben on 03/09/2015.
@@ -12,11 +14,13 @@ public class MainFrame extends JFrame {
     private JTextField hour, minutes, seconds;
     private JCheckBox force;
     private JButton start, end;
+    private JLabel timeLabel;
+    private TimerControl timerControl;
     TrayIcon trayIcon;
     SystemTray tray;
 
     public MainFrame() {
-        super("Smart Mail");
+        //super("");
         setLayout(new BorderLayout());
 
         //initialize Panel
@@ -28,6 +32,12 @@ public class MainFrame extends JFrame {
         minutes = new JTextField(5);
         seconds = new JTextField(5);
         force = new JCheckBox();
+
+        timeLabel = new JLabel("00:00:00");
+        timePanel.add(new JLabel("Timer:"));
+        timePanel.add(timeLabel);
+
+        timerControl = new TimerControl(timeLabel);
 
         timePanel.add(new JLabel("Hours:"));
         timePanel.add(hour);
@@ -44,6 +54,18 @@ public class MainFrame extends JFrame {
         buttonPanel.setLayout(new BorderLayout());
 
         start = new JButton("Start Timer");
+        start.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int h, m, s, ms;
+                h = hour.getText().equals("") ? 0 : Integer.parseInt(hour.getText()) * 3600;
+                m = minutes.getText().equals("") ? 0 : Integer.parseInt(minutes.getText()) * 60;
+                s = seconds.getText().equals("") ? 0 : Integer.parseInt(seconds.getText());
+                ms = h + m + s;
+                timerControl.startTimer(ms);
+            }
+        });
+
         end = new JButton("End Timer");
 
         buttonPanel.add(start, BorderLayout.CENTER);
@@ -54,11 +76,10 @@ public class MainFrame extends JFrame {
         //frame operations
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         // setMinimumSize(new Dimension(200, 200));
-        setResizable(false);
+        //setResizable(false);
         setLocationRelativeTo(null);
         pack();
         setVisible(true);
     }
-
 
 }
