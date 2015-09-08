@@ -12,14 +12,15 @@ public class TimerControl {
     Timer t;
     JLabel timeLabel;
     int time;
+    JFrame mainFrame;
     int sec, min, hour;
 
     /*Constructor which points class to label*/
-    public TimerControl(JLabel timeLabel) {
+    public TimerControl(JFrame mainFrame, JLabel timeLabel) {
         this.timeLabel = timeLabel;
+        this.mainFrame = mainFrame;
     }
 
-    //beed to fix HERE
     public void startTimer(int startTime) {
         this.time = startTime;
         formatTime(time);
@@ -29,6 +30,7 @@ public class TimerControl {
             public void actionPerformed(ActionEvent e) {
                 decrementTime();
                 timeLabel.setText(formatTime(time));
+                mainFrame.setTitle(formatTime(time));
                 //System.out.println("The time: " + time);
 
             }

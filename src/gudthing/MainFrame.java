@@ -20,7 +20,8 @@ public class MainFrame extends JFrame {
     SystemTray tray;
 
     public MainFrame() {
-        //super("");
+        super("00:00:00");
+
         setLayout(new BorderLayout());
 
         //initialize Panel
@@ -37,7 +38,7 @@ public class MainFrame extends JFrame {
         timePanel.add(new JLabel("Timer:"));
         timePanel.add(timeLabel);
 
-        timerControl = new TimerControl(timeLabel);
+        timerControl = new TimerControl(this, timeLabel);
 
         timePanel.add(new JLabel("Hours:"));
         timePanel.add(hour);
@@ -75,11 +76,18 @@ public class MainFrame extends JFrame {
 
         //frame operations
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        // setMinimumSize(new Dimension(200, 200));
+        setPreferredSize(new Dimension(200, 220));
         //setResizable(false);
         setLocationRelativeTo(null);
         pack();
         setVisible(true);
     }
+
+    private void setFrameTitle(String title) {
+        this.setTitle(title);
+    }
+    /*public static void setFrametitle(String title){
+        setFrametitle(title);
+    }*/
 
 }
