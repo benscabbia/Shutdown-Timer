@@ -1,4 +1,6 @@
-package gudthing;
+package gudthing.shutdowntimer.gui;
+
+import gudthing.shutdowntimer.model.TimerControl;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -30,8 +32,11 @@ public class MainFrame extends JFrame {
         timePanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 
         hour = new JTextField(5);
+        hour.setText("00");
         minutes = new JTextField(5);
+        minutes.setText("20");
         seconds = new JTextField(5);
+        seconds.setText("00");
         force = new JCheckBox();
 
         timeLabel = new JLabel("00:00:00");
@@ -59,15 +64,23 @@ public class MainFrame extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 int h, m, s, ms;
+                boolean forced;
                 h = hour.getText().equals("") ? 0 : Integer.parseInt(hour.getText()) * 3600;
                 m = minutes.getText().equals("") ? 0 : Integer.parseInt(minutes.getText()) * 60;
                 s = seconds.getText().equals("") ? 0 : Integer.parseInt(seconds.getText());
+                forced = force.isSelected() ? true : false;
                 ms = h + m + s;
-                timerControl.startTimer(ms);
+                timerControl.startTimer(ms, forced);
             }
         });
 
         end = new JButton("End Timer");
+        end.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                timerControl.stopTimer();
+            }
+        });
 
         buttonPanel.add(start, BorderLayout.CENTER);
         buttonPanel.add(end, BorderLayout.SOUTH);
@@ -76,7 +89,7 @@ public class MainFrame extends JFrame {
 
         //frame operations
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setPreferredSize(new Dimension(200, 220));
+        setPreferredSize(new Dimension(190, 220));
         //setResizable(false);
         setLocationRelativeTo(null);
         pack();
@@ -86,8 +99,6 @@ public class MainFrame extends JFrame {
     private void setFrameTitle(String title) {
         this.setTitle(title);
     }
-    /*public static void setFrametitle(String title){
-        setFrametitle(title);
-    }*/
+
 
 }

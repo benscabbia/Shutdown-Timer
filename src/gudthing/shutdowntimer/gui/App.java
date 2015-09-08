@@ -1,4 +1,4 @@
-package gudthing;
+package gudthing.shutdowntimer.gui;
 
 import javax.swing.*;
 
