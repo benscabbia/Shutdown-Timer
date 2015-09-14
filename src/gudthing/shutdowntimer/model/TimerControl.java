@@ -14,6 +14,7 @@ public class TimerControl {
     int time;
     JFrame mainFrame;
     WindowsLogic windowLogic;
+    boolean started = false;//used to determine if timer is active
 
     /*Constructor which points class to label*/
     public TimerControl(JFrame mainFrame, JLabel timeLabel) {
@@ -29,6 +30,7 @@ public class TimerControl {
         t = new Timer(1000, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                started = true;
                 decrementTime();
                 String formatTime = formatTime(time);
                 timeLabel.setText(formatTime);
@@ -41,9 +43,14 @@ public class TimerControl {
     }
 
     public void stopTimer() {
-        t.stop();
-        timeLabel.setText("00:00:00");
-        mainFrame.setTitle("00:00:00");
+        //checks to see if there's an active timer
+        if (started) {
+            started = false;
+            t.stop();
+            timeLabel.setText("00:00:00");
+            mainFrame.setTitle("00:00:00");
+        }
+        //let abort still run, incase a different instance is running
         windowLogic.abortShutdown();
     }
 
