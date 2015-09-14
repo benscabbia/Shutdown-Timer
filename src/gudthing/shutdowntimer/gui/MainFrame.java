@@ -18,6 +18,7 @@ public class MainFrame extends JFrame {
     private JButton start, end;
     private JLabel timeLabel;
     private TimerControl timerControl;
+    private boolean running;
     TrayIcon trayIcon;
     SystemTray tray;
 
@@ -31,6 +32,7 @@ public class MainFrame extends JFrame {
         timePanel.setLayout(new GridLayout(0, 2, 0, 5));
         timePanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 
+        running = false;
         hour = new JTextField(5);
         hour.setText("00");
         minutes = new JTextField(5);
@@ -71,6 +73,8 @@ public class MainFrame extends JFrame {
                 forced = force.isSelected() ? true : false;
                 ms = h + m + s;
                 timerControl.startTimer(ms, forced);
+                running = true;
+                toggleButtonStatus();
             }
         });
 
@@ -78,7 +82,16 @@ public class MainFrame extends JFrame {
         end.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                //check if there's an active timer
+
                 timerControl.stopTimer();
+
+
+                //ensure user can't disable start with no timer running
+                if (running) {
+                    toggleButtonStatus();
+                }
+
             }
         });
 
@@ -100,5 +113,22 @@ public class MainFrame extends JFrame {
         this.setTitle(title);
     }
 
+    //used to stop further input while timer is running
+    private void toggleButtonStatus() {
+        if (start.isEnabled()) {
+            hour.setEnabled(false);
+            minutes.setEnabled(false);
+            seconds.setEnabled(false);
+            start.setEnabled(false);
+            running = true;
+        } else {
+            hour.setEnabled(true);
+            minutes.setEnabled(true);
+            seconds.setEnabled(true);
+            start.setEnabled(true);
+            running = false;
+        }
+
+    }
 
 }

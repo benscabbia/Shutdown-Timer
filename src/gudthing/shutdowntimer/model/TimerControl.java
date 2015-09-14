@@ -42,6 +42,8 @@ public class TimerControl {
 
     public void stopTimer() {
         t.stop();
+        timeLabel.setText("00:00:00");
+        mainFrame.setTitle("00:00:00");
         windowLogic.abortShutdown();
     }
 
