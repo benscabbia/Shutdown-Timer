@@ -7,6 +7,8 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowStateListener;
 
 /**
  * Created by Ben on 03/09/2015.
@@ -83,15 +85,11 @@ public class MainFrame extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 //check if there's an active timer
-
                 timerControl.stopTimer();
-
-
                 //ensure user can't disable start with no timer running
                 if (running) {
                     toggleButtonStatus();
                 }
-
             }
         });
 
@@ -99,6 +97,79 @@ public class MainFrame extends JFrame {
         buttonPanel.add(end, BorderLayout.SOUTH);
 
         add(buttonPanel, BorderLayout.SOUTH);
+
+        //check if system tray is supported
+        if (SystemTray.isSupported()) {
+            tray = SystemTray.getSystemTray();
+            //need to add image
+            Image image = Toolkit.getDefaultToolkit().getImage("");
+
+            ActionListener existListener = new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    System.exit(0);
+                }
+            };
+
+
+            PopupMenu popup = new PopupMenu();
+            MenuItem defaultItem = new MenuItem("Exit");
+            defaultItem.addActionListener(existListener);
+            popup.add(defaultItem);
+
+            defaultItem = new MenuItem("Open");
+            defaultItem.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    setVisible(true);
+                    setExtendedState(JFrame.NORMAL);
+                }
+            });
+
+            popup.add(defaultItem);
+            trayIcon = new TrayIcon(image, "Shutdown Timer", popup);
+            trayIcon.setImageAutoSize(true);
+        } else {
+            System.out.println("ST not supported");
+        }
+
+        addWindowStateListener(new WindowStateListener() {
+            @Override
+            public void windowStateChanged(WindowEvent e) {
+                if (e.getNewState() == ICONIFIED) {
+                    try {
+                        tray.add(trayIcon);
+                        setVisible(false);
+                        System.out.println("added to SystemTray");
+                    } catch (AWTException ex) {
+                        System.out.println("unable to add to tray");
+                    }
+                }
+                if (e.getNewState() == 7) {
+                    try {
+                        tray.add(trayIcon);
+                        setVisible(false);
+                        System.out.println("added to SystemTray");
+                    } catch (AWTException ex) {
+                        System.out.println("unable to add to system tray");
+                    }
+                }
+                if (e.getNewState() == MAXIMIZED_BOTH) {
+                    tray.remove(trayIcon);
+                    setVisible(true);
+                    System.out.println("Tray icon removed");
+                }
+                if (e.getNewState() == NORMAL) {
+                    tray.remove(trayIcon);
+                    setVisible(true);
+                    System.out.println("Tray icon removed");
+                }
+            }
+        });
+        //setIconImage(Toolkit.getDefaultToolkit().getImage(""));
+
+
+
 
         //frame operations
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
