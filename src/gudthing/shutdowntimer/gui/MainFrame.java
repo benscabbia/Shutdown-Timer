@@ -5,10 +5,7 @@ import gudthing.shutdowntimer.model.TimerControl;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowStateListener;
+import java.awt.event.*;
 
 /**
  * Created by Ben on 03/09/2015.
@@ -42,6 +39,7 @@ public class MainFrame extends JFrame {
         seconds = new JTextField(5);
         seconds.setText("00");
         force = new JCheckBox();
+        force.setSelected(true);
 
         timeLabel = new JLabel("00:00:00");
         timePanel.add(new JLabel("Timer:"));
@@ -102,7 +100,7 @@ public class MainFrame extends JFrame {
         if (SystemTray.isSupported()) {
             tray = SystemTray.getSystemTray();
             //need to add image
-            Image image = Toolkit.getDefaultToolkit().getImage("");
+            Image image = Toolkit.getDefaultToolkit().getImage("D:\\Users\\Ben\\IdeaProjects\\shutdowntimer\\src\\gudthing\\clock-128.png");
 
             ActionListener existListener = new ActionListener() {
                 @Override
@@ -128,7 +126,17 @@ public class MainFrame extends JFrame {
 
             popup.add(defaultItem);
             trayIcon = new TrayIcon(image, "Shutdown Timer", popup);
+
+            //set trayicon properties
             trayIcon.setImageAutoSize(true);
+            trayIcon.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mousePressed(MouseEvent e) {
+                    setVisible(true);
+                    setExtendedState(JFrame.NORMAL);
+                }
+            });
+
         } else {
             System.out.println("ST not supported");
         }
@@ -141,6 +149,7 @@ public class MainFrame extends JFrame {
                         tray.add(trayIcon);
                         setVisible(false);
                         System.out.println("added to SystemTray");
+                        // trayIcon.displayMessage("I'm Running", "This program is still running. ", TrayIcon.MessageType.INFO );
                     } catch (AWTException ex) {
                         System.out.println("unable to add to tray");
                     }
