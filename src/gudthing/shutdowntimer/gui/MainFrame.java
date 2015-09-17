@@ -132,8 +132,10 @@ public class MainFrame extends JFrame {
             trayIcon.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mousePressed(MouseEvent e) {
-                    setVisible(true);
-                    setExtendedState(JFrame.NORMAL);
+                    if (e.getButton() == MouseEvent.BUTTON1) {
+                        setVisible(true);
+                        setExtendedState(JFrame.NORMAL);
+                    }
                 }
             });
 
