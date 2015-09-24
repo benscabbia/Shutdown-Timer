@@ -12,12 +12,12 @@ import java.awt.event.*;
  */
 public class MainFrame extends JFrame {
     private JPanel timePanel, buttonPanel;
-    private JTextField hour, minutes, seconds;
     private JCheckBox force;
     private JButton start, end;
     private JLabel timeLabel;
     private TimerControl timerControl;
     private boolean running;
+    private JSpinner hour, minutes, seconds;
     TrayIcon trayIcon;
     SystemTray tray;
 
@@ -32,14 +32,22 @@ public class MainFrame extends JFrame {
         timePanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 
         running = false;
-        hour = new JTextField(5);
-        hour.setText("00");
-        minutes = new JTextField(5);
-        minutes.setText("20");
-        seconds = new JTextField(5);
-        seconds.setText("00");
+
+        //default 20 minutes
+        SpinnerModel spinnerModel = new SpinnerNumberModel(20, 0, 99, 1);
+        minutes = new JSpinner();
+        minutes.setModel(spinnerModel);
+        SpinnerModel spinnerModel2 = new SpinnerNumberModel(0, 0, 99, 1);
+        SpinnerModel spinnerModel3 = new SpinnerNumberModel(0, 0, 99, 1);
+        hour = new JSpinner();
+        seconds = new JSpinner();
+        hour.setModel(spinnerModel2);
+        seconds.setModel(spinnerModel3);
+
+
         force = new JCheckBox();
         force.setSelected(true);
+
 
         timeLabel = new JLabel("00:00:00");
         timePanel.add(new JLabel("Timer:"));
@@ -67,9 +75,10 @@ public class MainFrame extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 int h, m, s, ms;
                 boolean forced;
-                h = hour.getText().equals("") ? 0 : Integer.parseInt(hour.getText()) * 3600;
-                m = minutes.getText().equals("") ? 0 : Integer.parseInt(minutes.getText()) * 60;
-                s = seconds.getText().equals("") ? 0 : Integer.parseInt(seconds.getText());
+                h = hour.getValue().equals("") ? 0 : (int) hour.getValue() * 3600;
+                m = minutes.getValue().equals("") ? 0 : (int) minutes.getValue() * 60;
+                s = seconds.getValue().equals("") ? 0 : (int) seconds.getValue();
+
                 forced = force.isSelected() ? true : false;
                 ms = h + m + s;
                 timerControl.startTimer(ms, forced);
