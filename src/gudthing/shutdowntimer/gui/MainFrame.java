@@ -94,7 +94,10 @@ public class MainFrame extends JFrame {
         //check if system tray is supported
         if (SystemTray.isSupported()) {
             tray = SystemTray.getSystemTray();
-            Image image = Toolkit.getDefaultToolkit().getImage("D:\\Users\\Ben\\IdeaProjects\\shutdowntimer\\src\\gudthing\\clock-128.png");
+            //Image image = Toolkit.getDefaultToolkit().getImage("D:\\Users\\Ben\\IdeaProjects\\shutdowntimer\\src\\gudthing\\shutdowntimer\\data\\clock-128.png");
+            //Image image = new ImageIcon(this.getClass().getResource("/data/clock-128.png")).getImage();
+            Image image = Toolkit.getDefaultToolkit().createImage(this.getClass().getResource("/gudthing/shutdowntimer/data/clock-128.png"));
+
 
             ActionListener existListener = new ActionListener() {
                 @Override
