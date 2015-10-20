@@ -2,6 +2,6 @@ This is a very basic windows shutdown program, which comes with a fully function
 
 Features:
 
--Can specify shutdown timer in hours, minutes and seconds
--Can start/abort a timer
--Minimizes to system tray and can be reopened from tray (keeping track of timer with a visual timer)
+*Can specify shutdown timer in hours, minutes and seconds
+*Can start/abort a timer
+*Minimizes to system tray and can be reopened from tray (keeping track of timer with a visual timer)
