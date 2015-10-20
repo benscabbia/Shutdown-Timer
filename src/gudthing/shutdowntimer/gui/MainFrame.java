@@ -69,6 +69,7 @@ public class MainFrame extends JFrame {
         buttonPanel = new JPanel();
         buttonPanel.setLayout(new BorderLayout());
 
+        //start button
         start = new JButton("Start Timer");
         start.addActionListener(new ActionListener() {
             @Override
@@ -87,6 +88,7 @@ public class MainFrame extends JFrame {
             }
         });
 
+        //end button
         end = new JButton("End Timer");
         end.addActionListener(new ActionListener() {
             @Override
@@ -190,16 +192,9 @@ public class MainFrame extends JFrame {
             }
         });
 
-
-
-
         //frame operations
-        setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);// <- prevent closing
-        addWindowListener(new WindowAdapter() {
-            public void windowClosing(WindowEvent e) {
-                setExtendedState(JFrame.ICONIFIED);
-            }
-        });
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
         setPreferredSize(new Dimension(190, 220));
         //setResizable(false);
         setLocationRelativeTo(null);
@@ -215,13 +210,20 @@ public class MainFrame extends JFrame {
             seconds.setEnabled(false);
             start.setEnabled(false);
             running = true;
+            //minimize frame on close if timer active
+            setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);// <- prevent closing if timer on
+            addWindowListener(new WindowAdapter() {
+                public void windowClosing(WindowEvent e) {
+                    setExtendedState(JFrame.ICONIFIED);
+                }
+            });
         } else {
             hour.setEnabled(true);
             minutes.setEnabled(true);
             seconds.setEnabled(true);
             start.setEnabled(true);
             running = false;
+            setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         }
-
     }
 }
