@@ -70,47 +70,30 @@ public class MainFrame extends JFrame {
         buttonPanel.setLayout(new BorderLayout());
 
         //start button
-        start = new JButton("Start Timer");
-        start.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                int h, m, s, ms;
-                boolean forced;
-                h = hour.getValue().equals("") ? 0 : (int) hour.getValue() * 3600;
-                m = minutes.getValue().equals("") ? 0 : (int) minutes.getValue() * 60;
-                s = seconds.getValue().equals("") ? 0 : (int) seconds.getValue();
-
-                forced = force.isSelected() ? true : false;
-                ms = h + m + s;
-                timerControl.startTimer(ms, forced);
-                running = true;
-                toggleButtonStatus();
-            }
-        });
-
-        //end button
-        end = new JButton("End Timer");
-        end.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                //check if there's an active timer
-                timerControl.stopTimer();
-                //ensure user can't disable start with no timer running
-                if (running) {
-                    toggleButtonStatus();
-                }
-            }
-        });
+        createButtons();
 
         buttonPanel.add(start, BorderLayout.CENTER);
         buttonPanel.add(end, BorderLayout.SOUTH);
-
         add(buttonPanel, BorderLayout.SOUTH);
 
+        setSystemTray();
+        setWindowStateListener();
+
+        //frame operations
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setPreferredSize(new Dimension(190, 220));
+        //setResizable(false);
+        setLocationRelativeTo(null);
+        pack();
+        setVisible(true);
+    }
+
+    //method sets system tray  behaviour when minimized such as open & exit options and restore when left-clicked
+    //also sets system icon image
+    private void setSystemTray() {
         //check if system tray is supported
         if (SystemTray.isSupported()) {
             tray = SystemTray.getSystemTray();
-            //need to add image
             Image image = Toolkit.getDefaultToolkit().getImage("D:\\Users\\Ben\\IdeaProjects\\shutdowntimer\\src\\gudthing\\clock-128.png");
 
             ActionListener existListener = new ActionListener() {
@@ -120,7 +103,7 @@ public class MainFrame extends JFrame {
                 }
             };
 
-
+            //create right-click popup menu
             PopupMenu popup = new PopupMenu();
             MenuItem defaultItem = new MenuItem("Exit");
             defaultItem.addActionListener(existListener);
@@ -141,6 +124,7 @@ public class MainFrame extends JFrame {
 
             //set trayicon properties
             trayIcon.setImageAutoSize(true);
+            //make frame visible with single left click
             trayIcon.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mousePressed(MouseEvent e) {
@@ -150,11 +134,13 @@ public class MainFrame extends JFrame {
                     }
                 }
             });
-
         } else {
             System.out.println("ST not supported");
         }
+    }
 
+    //method minimizes frame to tray and sets system tray icon
+    private void setWindowStateListener() {
         addWindowStateListener(new WindowStateListener() {
             @Override
             public void windowStateChanged(WindowEvent e) {
@@ -191,15 +177,42 @@ public class MainFrame extends JFrame {
                 }
             }
         });
+    }
 
-        //frame operations
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    //create button and listeners
+    private void createButtons() {
+        //start button
+        start = new JButton("Start Timer");
+        start.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int h, m, s, ms;
+                boolean forced;
+                h = hour.getValue().equals("") ? 0 : (int) hour.getValue() * 3600;
+                m = minutes.getValue().equals("") ? 0 : (int) minutes.getValue() * 60;
+                s = seconds.getValue().equals("") ? 0 : (int) seconds.getValue();
 
-        setPreferredSize(new Dimension(190, 220));
-        //setResizable(false);
-        setLocationRelativeTo(null);
-        pack();
-        setVisible(true);
+                forced = force.isSelected() ? true : false;
+                ms = h + m + s;
+                timerControl.startTimer(ms, forced);
+                running = true;
+                toggleButtonStatus();
+            }
+        });
+
+        //end button
+        end = new JButton("End Timer");
+        end.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                //check if there's an active timer
+                timerControl.stopTimer();
+                //ensure user can't disable start with no timer running
+                if (running) {
+                    toggleButtonStatus();
+                }
+            }
+        });
     }
 
     //used to stop further input while timer is running

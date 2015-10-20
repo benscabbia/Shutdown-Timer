@@ -26,6 +26,7 @@ public class TimerControl {
         windowLogic = new WindowsLogic();
     }
 
+    //executed by mainframe when start button pressed
     public void startTimer(int startTime, boolean forced) {
         this.time = startTime;
         formatTime(time);
@@ -38,10 +39,11 @@ public class TimerControl {
                 String formatTime = formatTime(time);
                 timeLabel.setText(formatTime);
                 mainFrame.setTitle(formatTime);
+                //notifies user when there is 5 minutes to go
                 if (time <= 300 && !notification) {
                     //mainFrame.showTrayIcon("s", "");
                     if (trayIcon != null) {
-                        trayIcon.displayMessage("5 Minutes to go!", "Captain, the system will shut down in 5minutes!. ", TrayIcon.MessageType.INFO);
+                        trayIcon.displayMessage("5 Minutes to go!", "Captain, the system will shut down in 5minutes!. ", TrayIcon.MessageType.WARNING);
                     }
                     System.out.println("less than min to gooooooo");
                     notification = true;
@@ -53,6 +55,7 @@ public class TimerControl {
 
     }
 
+    //executed by mainframe when stop button pressed
     public void stopTimer() {
         //checks to see if there's an active timer
         if (started) {
@@ -68,6 +71,7 @@ public class TimerControl {
         windowLogic.abortShutdown();
     }
 
+    //method used to format time as its decremented
     private String formatTime(long millisecs) {
         return String.format("%02d:%02d:%02d",
                 TimeUnit.SECONDS.toHours(millisecs),
@@ -79,6 +83,7 @@ public class TimerControl {
     private void decrementTime() {
         time -= 1;
     }
+
 
     public void setTrayIcon(TrayIcon trayicon) {
         this.trayIcon = trayicon;
