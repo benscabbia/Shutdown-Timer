@@ -135,6 +135,7 @@ public class MainFrame extends JFrame {
 
             popup.add(defaultItem);
             trayIcon = new TrayIcon(image, "Shutdown Timer", popup);
+            setIconImage(image);
 
             //set trayicon properties
             trayIcon.setImageAutoSize(true);
@@ -160,7 +161,9 @@ public class MainFrame extends JFrame {
                         tray.add(trayIcon);
                         setVisible(false);
                         System.out.println("added to SystemTray");
-                        // trayIcon.displayMessage("I'm Running", "This program is still running. ", TrayIcon.MessageType.INFO );
+                        timerControl.setTrayIcon(trayIcon);
+                        trayIcon.displayMessage("I'm still here", "I'll keep track of time for you, but you want me gone, right-click and select exit. ", TrayIcon.MessageType.INFO);
+                        //showTrayIcon("I'm still here", "I'll keep track of time for you, but you want me gone, right-click and select exit. ");
                     } catch (AWTException ex) {
                         System.out.println("unable to add to tray");
                     }
@@ -186,22 +189,22 @@ public class MainFrame extends JFrame {
                 }
             }
         });
-        //setIconImage(Toolkit.getDefaultToolkit().getImage(""));
 
 
 
 
         //frame operations
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);// <- prevent closing
+        addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent e) {
+                setExtendedState(JFrame.ICONIFIED);
+            }
+        });
         setPreferredSize(new Dimension(190, 220));
         //setResizable(false);
         setLocationRelativeTo(null);
         pack();
         setVisible(true);
-    }
-
-    private void setFrameTitle(String title) {
-        this.setTitle(title);
     }
 
     //used to stop further input while timer is running
@@ -221,5 +224,4 @@ public class MainFrame extends JFrame {
         }
 
     }
-
 }

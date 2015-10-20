@@ -1,6 +1,7 @@
 package gudthing.shutdowntimer.model;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.concurrent.TimeUnit;
@@ -14,7 +15,9 @@ public class TimerControl {
     int time;
     JFrame mainFrame;
     WindowsLogic windowLogic;
+    TrayIcon trayIcon;
     boolean started = false;//used to determine if timer is active
+    boolean notification = false; //used to determine whether notication has appeared
 
     /*Constructor which points class to label*/
     public TimerControl(JFrame mainFrame, JLabel timeLabel) {
@@ -35,6 +38,14 @@ public class TimerControl {
                 String formatTime = formatTime(time);
                 timeLabel.setText(formatTime);
                 mainFrame.setTitle(formatTime);
+                if (time <= 300 && !notification) {
+                    //mainFrame.showTrayIcon("s", "");
+                    if (trayIcon != null) {
+                        trayIcon.displayMessage("5 Minutes to go!", "Captain, the system will shut down in 5minutes!. ", TrayIcon.MessageType.INFO);
+                    }
+                    System.out.println("less than min to gooooooo");
+                    notification = true;
+                }
             }
         });
         t.start();
@@ -49,6 +60,9 @@ public class TimerControl {
             t.stop();
             timeLabel.setText("00:00:00");
             mainFrame.setTitle("00:00:00");
+            if (trayIcon != null) {
+                notification = false;
+            }
         }
         //let abort still run, incase a different instance is running
         windowLogic.abortShutdown();
@@ -64,6 +78,10 @@ public class TimerControl {
 
     private void decrementTime() {
         time -= 1;
+    }
+
+    public void setTrayIcon(TrayIcon trayicon) {
+        this.trayIcon = trayicon;
     }
 
 
